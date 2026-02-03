@@ -1,10 +1,6 @@
-a = 5 + 3
-b += a * 2
-c = ! b || 0
-d = a ** 2
-e //= 3
-f = ( a + b ) * ( c - d ) / e
-g %= ( f ** 2) + 1
-h = !(( a > b ) && ( c < d ) ) || e
-i **= 2
-j = i // (a + b * c)
+a = 9
+b = sqrt(a)
+c = pow(a, 3)
+d = log(b) + sin(a)
+e = cos(c) * tan(d)
+f = abs(-a + b) / exp(2)
