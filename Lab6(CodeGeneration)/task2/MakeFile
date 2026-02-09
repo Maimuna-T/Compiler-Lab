@@ -1,0 +1,59 @@
+# ==========================================
+# COMPILER MAKEFILE (GNUWIN32 COMPATIBLE)
+# ==========================================
+
+# 1. Configuration: Match these to your .l and .y filenames
+# If your files are named parser.y and lexer.l, set TARGET_BASE = parser
+TARGET_BASE = parser
+LEX_FILE    = lexer.l
+INPUT_FILE  = input.txt
+TAC_OUT     = tac.txt
+ASM_OUT     = asm.txt
+
+# 2. GnuWin32 Fixes: Setting Environment Variables for M4 and Bison
+export M4 = C:/PROGRA~2/GnuWin32/bin/m4.exe
+export BISON_PKGDATADIR = C:/PROGRA~2/GnuWin32/share/bison
+
+# 3. Tool Settings
+CC      = gcc
+LEX     = flex
+YACC    = bison
+YFLAGS  = -d
+LIBS    = -lm
+
+# 4. Derived Names
+EXECUTABLE = compiler.exe
+LEX_OUT    = lex.yy.c
+YACC_C     = $(TARGET_BASE).tab.c
+YACC_H     = $(TARGET_BASE).tab.h
+
+# --- Build Rules ---
+
+all: $(EXECUTABLE)
+
+$(EXECUTABLE): $(LEX_OUT) $(YACC_C)
+	$(CC) $(LEX_OUT) $(YACC_C) -o $(EXECUTABLE) $(LIBS)
+
+$(LEX_OUT): $(LEX_FILE) $(YACC_H)
+	$(LEX) $(LEX_FILE)
+
+$(YACC_C) $(YACC_H): $(TARGET_BASE).y
+	$(YACC) $(YFLAGS) $(TARGET_BASE).y
+
+# Run command: Compiles, runs, and displays generated files
+run: all
+	@if [ -f $(INPUT_FILE) ]; then \
+		./$(EXECUTABLE); \
+		echo "------------------------------------------"; \
+		echo "SUCCESS: Code generated."; \
+		echo "Check $(TAC_OUT) and $(ASM_OUT)"; \
+		echo "------------------------------------------"; \
+	else \
+		echo "ERROR: $(INPUT_FILE) not found."; \
+	fi
+
+clean:
+	rm -f $(LEX_OUT) $(YACC_C) $(YACC_H) $(EXECUTABLE) $(TAC_OUT) $(ASM_OUT)
+	@echo "Cleanup complete."
+
+.PHONY: all run clean
